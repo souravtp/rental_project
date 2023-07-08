@@ -6,7 +6,10 @@
     <title>Document</title>
 </head>
 <body>
+    <img src="{{object.image_url}}" alt="">
     <h1>{{object.make}}</h1>
     <p>{{object.model}}</p>
+    <a href="{% url 'car:rent' object.id %}">Rent this car</a>
+    <a class="" href="{% url 'car:list' %}">Back</a>
 </body>
 </html>

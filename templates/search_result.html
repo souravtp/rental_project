@@ -10,6 +10,7 @@
         {% for car in cars %}
         <h1>{{car.make}}</h1>
         <h2>{{car.model}}</h2>
+        <p>{{car.fuel}}</p>
         <h3>{{ car.price }}</h3>
         <a href="{% url 'car:detail' car.id %}">View</a>
         <hr>

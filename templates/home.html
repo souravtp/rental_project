@@ -42,10 +42,7 @@
             </ul>
           </li>
         </ul>
-        <form action="" class="search custom-search text-center mx-3" method="get">
-          <input name="q" type="text" class="custom-search-input" autocomplete="on" placeholder="Search Cars">
-          <button action="submit" class="btn btn-success" ><i class="bi bi-search"></i></button>
-        </form>
+        <a class="btn btn-success" href="{% url 'car:search' %}">Search</a>
       </div>
     </div>
   </nav>
