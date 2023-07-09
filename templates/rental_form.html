@@ -3,15 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Document</title>
 </head>
 <body>
-    <form action="" method="post">
-        {% csrf_token %}
-        {{car.make}}
-        {{car.model}}
-        {{ form.as_p }}
-        <button type="submit">Book Car</button>
-    </form>
+    <div class="container">
+        <form id="rentalForm" action="{% url 'car:rent' car.id %}" method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button class="btn btn-success" type="submit">Book Car</button>
+        </form>
+    </div>
+    <script>
+        // Add an event listener to the form submit event
+        document.getElementById("rentalForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent form submission
+    
+            // Retrieve the rental date and return date values
+            var rentalDate = document.getElementById("rentalDate").value;
+            var returnDate = document.getElementById("returnDate").value;
+    
+            // Calculate the total price
+            var totalPrice = calculateTotalPrice(rentalDate, returnDate);
+    
+            // Update the total price field
+            document.getElementById("totalPrice").value = totalPrice;
+    
+            // Submit the form
+            document.getElementById("rentalForm").submit();
+        });
+    
+        function calculateTotalPrice(rentalDate, returnDate) {
+            // Calculate the duration in days
+            var duration = Math.floor((new Date(returnDate) - new Date(rentalDate)) / (1000 * 60 * 60 * 24));
+    
+            // Retrieve the car price (assuming it's already available on the page)
+            var carPrice = parseFloat(document.getElementById("carPrice").value);
+    
+            // Calculate the total price
+            var totalPrice = duration * carPrice;
+    
+            return totalPrice.toFixed(2);
+        }
+    </script>    
 </body>
+
 </html>

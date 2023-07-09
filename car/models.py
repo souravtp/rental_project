@@ -26,8 +26,9 @@ class RentalHistory(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     rental_date = models.DateTimeField()
     return_date = models.DateTimeField()
+    rental_amount = models.DecimalField(max_digits=8, decimal_places=2, null=True)
 
-    def rental_hours(self):
+    def rental_days(self):
         duration = self.return_date - self.rental_date
-        return duration.total_seconds() // 3600
+        return duration.days
     
