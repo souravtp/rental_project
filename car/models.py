@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator
+from django.utils import timezone
 
 # Create your models here.
 
@@ -27,8 +28,15 @@ class RentalHistory(models.Model):
     rental_date = models.DateTimeField()
     return_date = models.DateTimeField()
     rental_amount = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    payment_status = models.BooleanField(default=False)
 
-    def rental_days(self):
+    def total_price(self):
         duration = self.return_date - self.rental_date
-        return duration.days
+        self.rental_amount = duration.days * self.car.price
+        self.save()
+
+    def mark_as_paid(self):
+        self.payment_status = True
+        self.save()
+
     

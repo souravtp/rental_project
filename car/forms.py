@@ -11,17 +11,9 @@ class CustomDateField(forms.DateTimeInput):
 class RentalForm(forms.ModelForm):
     rental_date = forms.DateTimeField(widget=CustomDateField)
     return_date = forms.DateTimeField(widget=CustomDateField)
-    rental_amount = forms.DecimalField()
 
     class Meta:
         model = RentalHistory
-        fields = ['rental_date', 'return_date', 'rental_amount']
+        fields = ['rental_date', 'return_date']
 
-    def clean(self):
-        cleaned_data = super().clean()
-        return_date = cleaned_data.get('return_date')
-        rental_date = cleaned_data.get('rented_date')
-
-        if rental_date and return_date and return_date < rental_date:
-            raise ValidationError('Retun date cannot be earlier than rented date.')
 
