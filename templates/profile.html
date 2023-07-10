@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+</head>
+<body>
+    <h1>Your Profile</h1>
+    <p>Username: {{user.username}}</p>
+    <p>Email: {{user.email}}</p>
+
+    <h2>Active Rentals</h2>
+        <!-- List current rented cars -->
+    <h4>Current Rented Cars</h4>
+    {% for rental in rental_data %}
+        {% if not rental.car.availability %}
+            <p>{{ rental.car.make }} - {{ rental.car.model }}</p>
+            <a href="{% url 'user:return' rental.car.id %}">Return</a>
+        {% endif %}
+    {% empty %}
+        <p>No current rented cars.</p>
+    {% endfor %}
+
+    <!-- List past rented cars -->
+    <h4>Past Rented Cars</h4>
+    {% for rental in rental_data %}
+        {% if rental.car.availability %}
+            <p>{{ rental.car.make }} - {{ rental.car.model }}</p>
+
+        {% endif %}
+    {% empty %}
+        <p>No past rented cars.</p>
+    {% endfor %}
+</body>
+</html>

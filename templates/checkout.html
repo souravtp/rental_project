@@ -7,21 +7,23 @@
 </head>
 <body>
     <h1>{{ rental.car.make }}</h1>
-    <h3>{{ rental.car.model }}</h3>
-    <p>Price per day: {{ rental.car.price }}</p>
-    <p>Rental date: {{ rental.rental_date }}</p>
-    <p>Return date: {{ rental.return_date }}</p>
-
+        <h3>{{ rental.car.model }}</h3>
+        <p>Price per day: {{ rental.car.price }}</p>
+        <p>Rental date: {{ rental.rental_date }}</p>
+        <p>Return date: {{ rental.return_date }}</p>
+        <p>{{rental.id}}</p>
+    
     <h1>Payment</h1>
     <p>Total Price: {{ rental.rental_amount }}</p>
     <!--Paypal payments-->
 	
     <div id="paypal-button-container"></div>
 
-    <script src="https://www.paypal.com/sdk/js?client-id=AaDbFCTAdi8NU4o-x6oOaBiLLoybkvO8w3xVZ2LgPAiTRwT4dDJu5u_ZecP9OtLTDvr7GZtZk_HuM3kq&currency=USD"></script>
+    <script 
+    src="https://www.paypal.com/sdk/js?client-id=AfTaY8RgJC4rNnsJdeg2uJNK2esNMT27dLk64zDK3K9adJEp0RYSx0nnWU2Kk5MkvCBcg6yfdg6uxCDf&currency=USD">
+    </script>
 
     <script>
-
         function getCookie(name) {
             var cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -40,7 +42,7 @@
         var csrftoken = getCookie('csrftoken');
 
         var total = '{{object.rental_amount}}'
-        var productId = '{{rental.id}}'
+        var rental_id = '{{rental.id}}'
 
         function completeOrder() {
             var url = "{% url 'car:complete' %}";
@@ -51,7 +53,7 @@
                     'content-type': 'application/json',
                     'X-CSRFToken': csrftoken,
                 },
-                body: JSON.stringify({ 'rental_id': '{{ rental.id }}' })
+                body: JSON.stringify({ 'rental_id': rental_id })
             })
             .then(response => response.json())
             .then(data => {
@@ -60,10 +62,10 @@
             .catch(error => {
                 console.error('Error:', error);
             });
+
+            window.location.href = "{% url 'car:list' %}";
         }
         
-
-
         // Render the PayPal button into #paypal-button-container
         paypal.Buttons({
             // Set up the transaction

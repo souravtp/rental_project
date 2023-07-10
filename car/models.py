@@ -38,5 +38,3 @@ class RentalHistory(models.Model):
     def mark_as_paid(self):
         self.payment_status = True
         self.save()
-
-    

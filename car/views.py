@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http.response import JsonResponse
+from django.urls import reverse
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from decimal import Decimal
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import HttpResponseBadRequest
+import json
 
 from .models import Car, RentalHistory
 from .forms import RentalForm
@@ -22,9 +23,9 @@ class ListCars(LoginRequiredMixin, generic.ListView):
     context_object_name = 'cars'
 
     def get_queryset(self):
-        query = Car.objects.filter(availability = True)
+        query = Car.objects.filter(availability=True)
         return query
-    
+
 
 class CarDetailView(LoginRequiredMixin, generic.DetailView):
     model = Car
@@ -63,10 +64,10 @@ class SearchResultView(LoginRequiredMixin, generic.ListView):
                 price = Decimal(price)
                 queryset = queryset.filter(price__lte=price)
             except (ValueError, TypeError):
-                pass            
+                pass
 
         return queryset
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if not context['cars']:
@@ -104,19 +105,22 @@ def checkout(request, rental_id):
 
     if request.method == 'POST':
         return redirect('car:detail', pk=rental.car.id)
-    
+
     return render(request, 'checkout.html', {'rental': rental, 'total': total_price})
 
 
 def complete_order(request):
     if request.method == 'POST':
-        rental_id = request.POST.get('rental_id')
+        payload = json.loads(request.body)
+        rental_id = payload.get('rental_id')
+        if rental_id is not None:
+            rental = RentalHistory.objects.get(pk=rental_id)
+            rental.mark_as_paid()
 
-        # Perform necessary operations to update the rental history and car availability
-        rental = RentalHistory.objects.get(id=rental_id)
-        rental.mark_as_paid()
+            rental.car.availability = False
+            rental.car.save()
 
-        rental.car.availability = False
-        rental.car.save()
-        # Return a JSON response with any relevant data
-        return JsonResponse({'message': 'Booking completed successfully'})
+            return redirect('car:list')
+
+
+    return HttpResponseBadRequest('Invalid request method')
