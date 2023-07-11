@@ -4,8 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http.response import JsonResponse
+from django.http import JsonResponse
 
 from car.models import RentalHistory, Car
 from .forms import CustomUserCreationForm, CustomAuthenticationForm
@@ -41,12 +40,11 @@ def profile_view(request):
 @login_required
 def return_car(request, pk):
     car = Car.objects.get(id=pk)
-    user = request.user
 
     if not car.availability:
         car.availability = True
         car.save()
 
-        return JsonResponse({"message": "Car returned successfully"})
+        return JsonResponse('Car returned successfully', safe=False)
 
     return redirect(reverse_lazy('user:profile'))
