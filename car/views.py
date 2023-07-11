@@ -121,5 +121,4 @@ def complete_order(request):
 
             return redirect('car:list')
 
-
     return HttpResponseBadRequest('Invalid request method')

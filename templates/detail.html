@@ -32,6 +32,7 @@
                     <p class="text-danger">Not available</p>
                     {% endif %}
                     <p class="text-success"><strong>{{object.fuel}}</strong></p>
+                    <p>Location: {{ object.location }}</p>
                     <a class="btn btn-primary" href="{% url 'car:list' %}">Back</a>
                     <a class="btn btn-success" href="{% url 'car:rent' object.id %}">Rent this car</a>
                 </div>

@@ -1,7 +1,5 @@
 from .models import RentalHistory
 from django import forms
-from django.core.exceptions import ValidationError
-from django.utils import timezone
 
 
 class CustomDateField(forms.DateTimeInput):
@@ -15,5 +13,3 @@ class RentalForm(forms.ModelForm):
     class Meta:
         model = RentalHistory
         fields = ['rental_date', 'return_date']
-
-

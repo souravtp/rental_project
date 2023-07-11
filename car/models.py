@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator
-from django.utils import timezone
+
 
 # Create your models here.
 
@@ -21,7 +21,6 @@ class Car(models.Model):
     availability = models.BooleanField(default=True)
 
     
-
 class RentalHistory(models.Model):
     car = models.ForeignKey(Car, on_delete=models.DO_NOTHING)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
