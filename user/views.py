@@ -5,6 +5,7 @@ from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 
 from car.models import RentalHistory, Car
 from .forms import CustomUserCreationForm, CustomAuthenticationForm
@@ -27,11 +28,21 @@ class UserLoginView(LoginView):
 @login_required
 def profile_view(request):
     user = request.user
-    rental_data = RentalHistory.objects.filter(user=user)
+
+    current_rental = RentalHistory.objects.filter(
+        user=user,
+        return_status=False,
+    )
+
+    past_rental = RentalHistory.objects.filter(
+        user=user,
+        return_status=True,
+    )
 
     context = {
         "user": user,
-        "rental_data": rental_data
+        "current_rentals": current_rental,
+        "past_rentals": past_rental
     }
 
     return render(request, 'profile.html', context)
@@ -39,12 +50,11 @@ def profile_view(request):
 
 @login_required
 def return_car(request, pk):
-    car = Car.objects.get(id=pk)
+    rental = get_object_or_404(RentalHistory, id=pk, user=request.user)
 
-    if not car.availability:
-        car.availability = True
-        car.save()
-
-        return JsonResponse('Car returned successfully', safe=False)
-
+    rental.car.availability = True
+    rental.return_status = True
+    rental.car.save()
+    rental.save()
+    
     return redirect(reverse_lazy('user:profile'))

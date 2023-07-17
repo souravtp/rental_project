@@ -21,22 +21,20 @@
         <h1>Your Rentals</h1>
         <!-- List current rented cars -->
         <h4>Current Rented Cars</h4>
-        {% for rental in rental_data %}
-            {% if not rental.car.availability %}
-                <p>{{ rental.car.make }} - {{ rental.car.model }}</p>
-                <p>Rental duration: {{ rental.rental_date }} to {{ rental.return_date }}</p>
-                <a class="btn btn-danger" href="{% url 'user:return' rental.car.id %}">Return</a>
-            {% endif %}
+        {% for rental in current_rentals %}
+            <p>{{ rental.car.make }} - {{ rental.car.model }}</p>
+            <p>Rental duration: {{ rental.rental_date }} to {{ rental.return_date }}</p>
+            {{rental.car.pk}}
+            <a class="btn btn-danger" href="{% url 'user:return' rental.pk %}">Return</a>
         {% empty %}
             <p>No current rented cars.</p>
         {% endfor %}
 
         <!-- List past rented cars -->
         <h4>Past Rented Cars</h4>
-        {% for rental in rental_data %}
-            {% if rental.car.availability %}
-                <p>{{ rental.car.make }} - {{ rental.car.model }}</p>
-            {% endif %}
+        {% for rental in past_rentals %}
+            <p>Car: {{ rental.car.make }} - {{ rental.car.model }}</p>
+            <p>Rental duration: {{ rental.rental_date }} to {{ rental.return_date }}</p>
         {% empty %}
             <p>No past rented cars.</p>
         {% endfor %}

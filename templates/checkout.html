@@ -84,7 +84,9 @@
                 console.error('Error:', error);
             });
 
-            window.location.href = "{% url 'car:list' %}";
+            setTimeout(function() {
+                window.location.href = "{% url 'car:list' %}";
+            }, 500);
         }
         
         // Render the PayPal button into #paypal-button-container
